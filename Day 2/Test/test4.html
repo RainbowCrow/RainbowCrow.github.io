@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <canvas id="canvas" style="border: 1px solid"></canvas>
+    <script>
+        var canvas = document.getElementById("canvas");
+        var c = canvas.getContext("2d");
+
+        canvas.height = innerHeight;
+        canvas.width = innerWidth;
+
+        addEventListener("resize", function () {
+            canvas.height = innerHeight;
+            canvas.width = innerWidth;
+        });
+
+        class Ball {
+            constructor(x, y, r, color, dx, dy, da) {
+                this.x = x;
+                this.y = y;
+                this.r = r;
+                this.color = color;
+                this.dx = dx;
+                this.dy = dy;
+                this.da = da;
+            }
+
+            draw() {
+                c.beginPath();
+                c.arc(this.x, this.y, this.r, 0, Math.PI * 2, true);
+                c.fillStyle = this.color;
+                c.fill();
+                c.stroke();
+            }
+
+            move() {
+                c.clearRect(0,0,canvas.width,canvas.height);
+                this.dx += this.da;
+                if(this.x + this.dx < this.r || this.x + this.r >= canvas.width) {
+                    this.dx = -this.dx;
+                }
+                this.x += this.dx;
+                this.draw();
+
+
+            }
+        }
+
+        var ball = new Ball(canvas.width*0.5,canvas.height*0.5, 20, "blue", 0, 0, 0);
+        ball.draw();
+
+        addEventListener("keydown", function(event){
+            if(event.keyCode == "37") {
+                ball.da = -2;
+            }
+            else if(event.keyCode == "39") {
+                ball.da = 2;
+            }
+        })
+
+        function animate() {
+            requestAnimationFrame(animate);
+            c.clearRect(0,0,canvas.width,canvas.height);
+            ball.move();
+        }
+
+        animate();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <p>Press spacebar to start. You can press spacebar again to stop the ball.</p>
+    <canvas id="canvas" width="450" height="450" style ="border: 2px solid;"></canvas>
+    <script>
+        const canvas = document.getElementById("canvas");
+        const c = canvas.getContext("2d");
+        
+        class Ball {
+            constructor(x, y, r, color, dx, dy) {
+                this.x = x;
+                this.y = y;
+                this.r = r;
+                this.color = color;
+                this.dx = dx;
+                this.dy = dy;
+            }
+
+            draw() {
+                c.beginPath();
+                c.arc(this.x, this.y, this.r, 0, Math.PI * 2, false);
+                c.fillStyle = this.color;
+                c.fill();
+                c.stroke();
+            }
+
+            move() {
+                c.clearRect(0, 0, canvas.width, canvas.height);
+                if (this.x - this.r == 0 && this.y + this.dy < this.r) {
+                    this.dx = 2;
+                    this.dy = 0;
+                }
+                if (this.y - this.r == 0 && this.x > canvas.width - this.r - 1) {
+                    this.dx = 0;
+                    this.dy = 2;
+                }
+                if (this.x + this.r == canvas.width && this.y > canvas.height - this.r - 1) {
+                    this.dx = -2;
+                    this.dy = 0;
+                    
+                }
+                if (this.y + this.r == canvas.height && this.x + this.dx < this.r) {
+                    this.dx = 0;
+                    this.dy = -2;
+                    
+                }
+
+                this.x += this.dx;
+                this.y += this.dy;
+                this.draw();
+                console.log(this.dx, this.dy, this.x , this.y);
+            }
+        }
+
+        var ball = new Ball(20, 20, 20, "blue", 0, 0);
+        ball.draw();
+
+        addEventListener("keydown", function (event) {
+            if(event.keyCode == 32) {
+                if(ball.dx == 0 && ball.dy == 0) {
+                    if(ball.y == ball.r && ball.x != canvas.width - ball.r) {
+                        ball.dx = 2;
+                        ball.dy = 0;
+                    }
+                    if(ball.x == canvas.width - ball.r && ball.y != canvas.height - ball.r) {
+                        ball.dx = 0;
+                        ball.dy = 2;
+                    }
+                    if(ball.y == canvas.height - ball.r && ball.x != ball.r) {
+                        ball.dx = -2;
+                        ball.dy = 0;
+                    }
+                    if(ball.x == ball.r && ball.y != ball.r) {
+                        ball.dx = 0;
+                        ball.dy = -2;
+                    }
+                }
+                else {
+                    ball.dx = 0;
+                    ball.dy = 0;
+                }
+            }
+        });
+
+        function animate() {
+            requestAnimationFrame(animate);
+            c.clearRect(0, 0, canvas.width, canvas.height);
+            ball.move();
+        }
+
+        animate();
+    </script>
+</body>
+
+</html>

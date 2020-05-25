@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <canvas id="canvas" style="border: 2px solid"></canvas>
+    <div style="text-align: center;">PRESS SPACEBAR TO KICK THE BALL TO THE SKY AND PUSH THE LEFT OR RIGHT ARROW BUTTONS TO SET THE BALL'S MOVEMENT DIRECTION.</div>
+    <script>
+        var canvas = document.getElementById("canvas");
+        var c = canvas.getContext("2d");
+
+        canvas.height = innerHeight;
+        canvas.width = innerWidth;
+
+        addEventListener("resize", function () {
+            canvas.height = innerHeight;
+            canvas.width = innerWidth;
+        });
+
+        class Ball {
+            constructor(x, y, r, color) {
+                this.x = x;
+                this.y = y;
+                this.r = r;
+                this.color = color;
+                this.dx = 0;
+                this.dy = 0;
+                this.ax = 0;
+                this.ay = 0;
+            }
+
+            draw() {
+                c.beginPath();
+                c.arc(this.x, this.y, this.r, 0, Math.PI * 2, false);
+                c.fillStyle = this.color;
+                c.fill();
+                c.stroke();
+            }
+
+            move() {
+                if (this.dy == 0 && this.y == canvas.height - this.r) {
+                    this.ay = 0;
+                    this.dx = 0;
+                }
+
+                if (this.x + this.r == canvas.width || this.x == this.r) {
+                    this.dx = -this.dx;
+                }
+                if (this.y + this.r == canvas.height) {
+                    this.dy = -this.dy;
+                }
+
+                this.dy += this.ay;
+
+                this.x += this.dx;
+                this.y += this.dy;
+
+                if (this.x < this.r) {
+                    this.x = this.r;
+                }
+                if (this.x > canvas.width - this.r) {
+                    this.x = canvas.width - this.r;
+                }
+                if (this.y > canvas.height - this.r) {
+                    this.y = canvas.height - this.r;
+                }
+
+                this.draw();
+                console.log(this.dy, this.y, canvas.height - this.r);
+            }
+
+            jump(x, y) {
+                c.clearRect(0, 0, canvas.width, canvas.height);
+                this.x = x;
+                this.y = y;
+                this.draw();
+            }
+        }
+
+        var ball = new Ball(canvas.width / 2, canvas.height / 2, 20, "blue");
+        ball.draw();
+
+        addEventListener("click", function () {
+            ball.jump(canvas.width / 2, canvas.height / 2);
+        });
+
+        addEventListener("keydown", function (event) {
+            if (event.keyCode == 32) {
+                ball.dy = -20;
+                ball.ay = 4;
+            }
+            else if (event.keyCode == 37) {
+                ball.dx = -8;
+            }
+            else if(event.keyCode == 39) {
+                ball.dx = 8;
+            }
+
+        })
+
+        function animate() {
+            requestAnimationFrame(animate);
+            c.clearRect(0, 0, canvas.width, canvas.height);
+            ball.move();
+        }
+
+        animate();
+
+    </script>
+</body>
+
+</html>

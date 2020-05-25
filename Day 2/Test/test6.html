@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <canvas id="canvas" style="border: 2px solid"></canvas>
+    <script>
+        const canvas = document.getElementById("canvas");
+        const c = canvas.getContext("2d");
+
+        canvas.height = innerHeight / 2;
+        canvas.width = innerWidth / 2;
+
+        addEventListener("resize", function () {
+            canvas.height = innerHeight / 2;
+            canvas.width = innerWidth / 2;
+        });
+
+        class Ball {
+            constructor(x, y, r, color) {
+                this.x = x;
+                this.y = y;
+                this.r = r;
+                this.color = color;
+                this.dx = 0;
+                this.dy = 0;
+                this.st = "";
+            }
+
+            draw(x, y, r, color) {
+                c.beginPath();
+                c.arc(this.x, this.y, this.r, 0, Math.PI * 2, false);
+                c.fillStyle = this.color;
+                c.fill();
+                c.stroke();
+            }
+
+            move() {
+                if (this.x + this.r > canvas.width) {
+                    this.x = canvas.width - this.r;
+                }
+                if (this.x < this.r) {
+                    this.x = this.r;
+                }
+                if (this.y < this.r) {
+                    this.y = this.r;
+                }
+                if (this.y + this.r > canvas.height) {
+                    this.y = canvas.height - this.r;
+                }
+
+                if (this.st == "tr") {
+                    if (this.x == this.r && this.y == this.r) {
+                        this.dx = 5;
+                        this.dy = 0;
+                        this.color = "yellow";
+                    }
+                    if (this.y == this.r && this.x == canvas.width - this.r) {
+                        this.dx = 0;
+                        this.dy = 5;
+                        this.color = "red";
+                    }
+                    if (this.x + this.r == canvas.width && this.y == canvas.height - this.r) {
+                        this.dx = -5;
+                        this.dy = 0;
+                        this.color = "green";
+
+                    }
+                    if (this.y + this.r == canvas.height && this.x == this.r) {
+                        this.dx = 0;
+                        this.dy = -5;
+                        this.color = "blue";
+                    }
+                }
+                else if (this.st == "fa") {
+                    if (this.x == this.r && this.y == this.r) {
+                        this.dx = 0;
+                        this.dy = 5;
+                        this.color = "blue";
+                    }
+                    if (this.y == this.r && this.x == canvas.width - this.r) {
+                        this.dx = -5;
+                        this.dy = 0;
+                        this.color = "yellow";
+                    }
+                    if (this.x + this.r == canvas.width && this.y == canvas.height - this.r) {
+                        this.dx = 0;
+                        this.dy = -5;
+                        this.color = "red";
+                    }
+                    if (this.y + this.r == canvas.height && this.x == this.r) {
+                        this.dx = 5;
+                        this.dy = 0;
+                        this.color = "green";
+                    }
+                }
+
+                this.x += this.dx;
+                this.y += this.dy;
+                c.clearRect(0, 0, canvas.width, canvas.height);
+                this.draw();
+                console.log(this.dx, this.dy, this.st);
+            }
+            jump(x, y) {
+                c.clearRect(0, 0, canvas.width, canvas.height);
+                this.x = x;
+                this.y = y;
+                this.draw();
+            }
+        }
+
+        var ball = new Ball(20, 20, 20, "blue");
+        ball.draw();
+
+        addEventListener("click", function() {
+            ball.jump(20, 20);
+        });
+
+        addEventListener("keydown", function (event) {
+            if (event.keyCode == 32) {
+                if (ball.dx != 0 || ball.dy != 0) {
+                    ball.dx = 0;
+                    ball.dy = 0;
+                }
+                else {
+                    if (ball.st == "tr") {
+                        if (ball.y == ball.r && ball.x != canvas.width - ball.r) {
+                            ball.dx = 5;
+                            ball.dy = 0;
+                        }
+                        if (ball.x == canvas.width - ball.r && ball.y != canvas.height - ball.r) {
+                            ball.dx = 0;
+                            ball.dy = 5;
+                        }
+                        if (ball.y == canvas.height - ball.r && ball.x != ball.r) {
+                            ball.dx = -5;
+                            ball.dy = 0;
+                        }
+                        if (ball.x == ball.r && ball.y != ball.r) {
+                            ball.dx = 0;
+                            ball.dy = -5;
+                        }
+                    }
+                    else if (ball.st == "fa") {
+                        if (ball.y == ball.r && ball.x != ball.r) {
+                            ball.dx = -5;
+                            ball.dy = 0;
+                        }
+                        if (ball.x == canvas.width - ball.r && ball.y != ball.r) {
+                            ball.dx = 0;
+                            ball.dy = -5;
+                        }
+                        if (ball.y == canvas.height - ball.r && ball.x != canvas.width - ball.r) {
+                            ball.dx = 5;
+                            ball.dy = 0;
+                        }
+                        if (ball.x == ball.r && ball.y != canvas.height - ball.r) {
+                            ball.dx = 0;
+                            ball.dy = 5;
+                        }
+                    }
+                    else {
+                        ball.st = "tr";
+                    }
+                }
+            }
+            if (event.keyCode == 13) {
+                if (ball.st == "tr") {
+                    ball.st = "fa";
+                    ball.dx = -ball.dx;
+                    ball.dy = -ball.dy;
+                }
+                else {
+                    ball.st = "tr";
+                    ball.dx = -ball.dx;
+                    ball.dy = -ball.dy;
+                }
+            }
+        })
+
+        function animate() {
+            requestAnimationFrame(animate);
+            c.clearRect(0, 0, canvas.width, canvas.height);
+            ball.move();
+        }
+
+        animate();
+    </script>
+</body>
+
+</html>
