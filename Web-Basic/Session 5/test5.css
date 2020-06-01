@@ -1,0 +1,24 @@
+.outer-img {
+    width: 300px;
+    height: 300px;
+    border: 2px solid;
+    margin-left: calc(50% - 150px);
+    position: relative;
+}
+
+body {
+    background-color: #45aaf2;
+}
+
+.outer-img img {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+/* opacity: 0 ~ 1; xÉT Độ đậm nhạt của ảnh*/
+.outer-img:hover {
+    transition: ease-in-out 0.1s;
+    box-shadow: 0 0 10px black;
+    
+}

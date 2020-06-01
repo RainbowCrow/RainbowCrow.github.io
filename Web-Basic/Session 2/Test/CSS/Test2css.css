@@ -1,0 +1,7 @@
+div#abc {
+    min-width: 500px;
+}
+div#xyz {
+    max-width: 700px;
+    min-width: 700px;
+}
