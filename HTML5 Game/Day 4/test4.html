@@ -55,15 +55,13 @@
         addEventListener('keydown', (event) => {
             if (event.keyCode == 32) {
                 var x = randomIntFromRange(0, canvas.width);
-                let ball = new Ball(radius, rgb(), x, canvas.height, Math.floor(Math.random() * 5) - 2.5, Math.floor(Math.random() * 1));
+                let ball = new Ball(radius, rgb(), x, canvas.height, Math.floor(Math.random() * 5) - 2.5, Math.floor(Math.random() * 5));
                 balls.push(ball);
             }
 
         });
 
         addEventListener("click", (event) => {
-
-
             let n = balls.length;
             while (n--) {
                 let ball = balls[n];
@@ -84,7 +82,8 @@
             balls.forEach(ball => ball.move());
             c.beginPath();
             c.font = "30px Arial";
-            c.fillText(count, canvas.width*0.5, canvas.height*0.5);
+            c.fillText("press space to create ball", canvas.width*0.1, canvas.height*0.3);
+            c.fillText(count, canvas.width * 0.5, canvas.height * 0.5);
         }
         animate();
 
