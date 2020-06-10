@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <canvas id="canvas"></canvas>
+    <script>
+        var canvas = document.getElementById("canvas");
+        var c = canvas.getContext("2d");
+
+        function draw() {
+            canvas.width = innerWidth;
+            canvas.height = innerHeight;
+            c.lineWidth = 10;
+            c.strokeRect(canvas.width * 0.05, canvas.height * 0.05, canvas.width * 0.9, canvas.height * 0.9);
+            c.lineWidth = 5;
+            c.moveTo(canvas.width * 0.05, canvas.height * 0.05);
+            c.lineTo(canvas.width * 0.95, canvas.height * 0.95);
+            c.stroke();
+            c.lineTo(canvas.width * 0.05, canvas.height * 0.95);
+            c.lineTo(canvas.width * 0.95, canvas.height * 0.05);
+            c.stroke();
+        }
+
+        draw();
+        addEventListener('resize', () => draw());
+    </script>
+</body>
+
+</html>

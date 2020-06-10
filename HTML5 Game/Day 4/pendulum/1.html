@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+  <canvas id="canvas" width="400" height="400" style="background-color:#333"></canvas>
+</body>
+
+</html>
+<script>
+  var canvas = document.getElementById("canvas");
+  var ctx = canvas.getContext("2d");
+
+  class Pendulum {
+    constructor(context, x, y, length, radius, angle) {
+      this.ctx = context;
+      this.x = x; //điểm tâm quay
+      this.y = y; //điểm tâm quay
+      this.length = length;//chiều dài dây
+      this.radius = radius;//bán kính quả lắclắc
+      this.angle = angle; //góc theo trục hoành (bởi vì đoạn dưới tính tọa độ x theo cos)
+    }
+
+    update() {
+      let c = this.ctx;
+      c.beginPath();
+      c.lineWidth = 4; 
+      c.lineCap = "round";
+      c.moveTo(this.x, this.y);//vẽ từ điểm tâm quay
+      c.strokeStyle = "white";
+      c.lineTo(this.x + this.length * Math.cos(this.angle), //kết thúc tại điểm có tọa độ x,
+      this.y + this.length * Math.sin(this.angle)); //kết thúc tại điểm có tọa độ y.
+      c.stroke();//vẽ xong dây tại thời điêm tt
+
+      c.beginPath();
+      c.arc(this.x + (this.length + this.radius) * Math.cos(this.angle), //tọa độ x  của quả lắc
+        this.y + (this.length + this.radius) * Math.sin(this.angle), //tọa độ y của quả lắc 
+        this.radius, 0, Math.PI * 2, false);
+
+      c.fillStyle = this.color;
+      c.fill();
+      c.stroke();// vẽ quả lắc 
+      c.closePath();
+
+
+    }
+  }
+
+  let pendulum = new Pendulum(ctx, canvas.width * 0.5, 10, canvas.height * 0.5, 15, Math.PI * 0.8);
+  function animate() {
+    requestAnimationFrame(animate);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    pendulum.update();
+  }
+  animate();
+</script>

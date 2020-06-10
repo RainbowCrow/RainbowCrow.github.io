@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #canvas {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas"></canvas>
+    <script>
+        var canvas = document.getElementById("canvas");
+        var c = canvas.getContext('2d');
+
+        canvas.height = innerHeight;
+        canvas.width = innerWidth;
+
+        class square {
+            constructor(center_x, center_y, color, side, rotate) {
+                this.center_x = center_x;
+                this.center_y = center_y;
+                this.color = color;
+                this.side = side;
+                this.rotate = rotate; // Check trạng thái.
+            }
+
+            draw() {
+                c.fillStyle = this.color;
+                if (!this.rotate) {
+                    c.fillRect(this.center_x - this.side / 2, this.center_y - this.side / 2, this.side, this.side);
+                } else {
+                    c.save();
+                    c.translate(this.center_x, this.center_y);
+                    c.rotate(Math.PI / 4);
+                    c.fillRect(- this.side / 2, - this.side / 2, this.side, this.side);
+                    c.restore();
+                }
+            }
+        }
+
+        let squares = [];
+        let side = 400;
+        let center_x = canvas.width / 2;
+        let center_y = canvas.height / 2;
+        let color1 = "blue";
+        let color2 = "red";
+
+        let square0 = new square(center_x, center_y, "blue", 400, false);
+        // let square1 = new square(center_x, center_y, "red", 400 / Math.sqrt(2), true);
+        squares.push(square0);
+
+        square0.draw();
+        // square1.draw();
+       
+        console.log(center_x, center_y);
+
+        function create_Squares(N) {
+            let color, rotate;
+            for (i = 1; i < N; i++) {
+                if (i % 2 == 0) {
+                    color = color1;
+                    rotate = false;
+                }
+                else {
+                    color = color2;
+                    rotate = true;
+                }
+                squares.push(new square(center_x, center_y, color, squares[i - 1].side / Math.sqrt(2), rotate));
+                console.log("succeed " + i);
+            }
+        }
+
+        function loopDrawing() {
+            c.clearRect(0, 0, canvas.width, canvas.height);
+            for (let square of squares) {
+                square.draw();
+            }
+        }
+
+        create_Squares(6);
+        loopDrawing();
+
+
+    </script>
+</body>
+
+</html>

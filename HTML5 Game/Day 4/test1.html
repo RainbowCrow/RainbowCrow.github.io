@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <canvas id="canvas" style="border: 1px solid black"></canvas>
+    <script>
+        var canvas = document.getElementById("canvas");
+        var c = canvas.getContext("2d");
+
+        canvas.width = innerWidth;
+        canvas.height = innerHeight;
+
+    class Car {
+        constructor(x, y, dx, color) {
+            this.x = x;
+            this.y = y;
+            this.dx = dx;
+            this.color = color;            
+        }
+
+        draw() {
+            c.beginPath();
+            c.fillRect(this.x, this.y, 250, 50);
+            c.fillStyle = this.color;
+            c.fill();
+            c.stroke();
+        }
+
+        move() {
+            c.clearRect(0,0,canvas.width,canvas.height);
+            this.x += this.dx;
+            this.draw();
+            if(this.x > canvas.width) {
+                this.x = -250;
+            }
+        }
+    }
+
+    var car = new Car(0, canvas.height - 50, 10, "blue");
+    car.draw();
+
+    function animate() {
+        requestAnimationFrame(animate);
+        c.clearRect(0,0,canvas.width,canvas.height);
+        car.move();
+    }
+    animate();
+    </script>
+</body>
+</html>

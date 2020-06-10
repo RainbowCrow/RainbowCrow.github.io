@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <canvas id="canvas" style="border: 1px solid"></canvas>
+    <script>
+        const canvas = document.getElementById("canvas");
+        const c = canvas.getContext("2d");
+
+        canvas.height = innerHeight;
+        canvas.width = innerWidth;
+
+        addEventListener("resize", function () {
+            canvas.height = innerHeight;
+            canvas.width = innerWidth;
+        });
+
+        class Ball {
+            constructor(x, y, r, color) {
+                this.x = x;
+                this.y = y;
+                this.r = r;
+                this.color = color;
+            }
+
+            draw(x, y, r, color) {
+                c.beginPath();
+                c.arc(this.x, this.y, this.r, 0, Math.PI * 2, false);
+                c.fillStyle = this.color;
+                c.fill();
+                c.stroke();
+            }
+
+
+        }
+
+        var ball = new Ball(20, 20, 20, "red");
+        ball.draw();
+        //_______________ 
+        // function repeatingFunc() {
+        //     c.clearRect(0, 0, canvas.width, canvas.height);
+        //     ball.x += 5;
+        //     ball.draw();
+        //     setTimeout(repeatingFunc, 100);
+        // }
+        // setTimeout(repeatingFunc, 100);
+
+        //_______________
+        // function waitFunc() {
+        //     c.clearRect(0, 0, canvas.width, canvas.height);
+        //     ball.x += 5;
+        //     ball.draw();
+        // }
+        // window.setInterval(waitFunc, 100);
+
+        addEventListener("click", function (event) {
+            // let size = balls.length;
+            // for (let i = 0; i < size; i++) {
+            //     if (Math.pow(event.clientX - balls[i].x, 2) + Math.pow(event.clientY - balls[i].y, 2) < Math.pow(balls[i].r, 2)) {
+            //         balls.splice(i, 1);
+            //         console.log(balls.length);
+            //         size--;
+            //         loopDrawing();
+            //         return;
+            //     }
+            // }
+            let i = balls.length;
+            while (i>=0) {
+                let ball = balls[i];
+                if (
+                    Math.pow((event.clientX - ball.x), 2) +
+                    Math.pow((event.clientY - ball.y), 2) < Math.pow(ball.r, 2)) {
+                    balls.splice(i, 1);
+                    return;
+                }
+                i--;
+                console.log("not hit");
+                loopDrawing();
+            }
+            });
+
+        function rgb() {
+            color = 'rgb(';
+            for (var i = 0; i < 3; i++) {
+                color += Math.floor(Math.random() * 255) + ',';
+            }
+            return color.replace(/\,$/, ')');
+        }
+
+        let balls = [];
+        function generateBall(N) {
+            let radius = Math.floor(Math.random() * 41) + 20;
+            for (let i = 0; i < N; i++) {
+                balls.push(new Ball(Math.floor(Math.random() * (canvas.width - radius * 2 + 1)) + radius, Math.floor(Math.random() * (canvas.height - radius * 2 + 1)) + radius, radius, "blue"));
+            }
+        }
+
+        function loopDrawing() {
+            c.clearRect(0, 0, canvas.width, canvas.height);
+            for (let ball of balls) {
+                ball.draw();
+            }
+
+        }
+
+        generateBall(10);
+        loopDrawing();
+
+
+    </script>
+</body>
+
+</html>
