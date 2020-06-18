@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/css/styleLibrary.css">
+</head>
+
+<body>
+    <h1>Hired Book</h1>
+    <table class="styleTable">
+        <tr>
+            <th>Date</th>
+            <th>Renter</th>
+            <th>Book</th>
+            <th>Amount</th>
+            <th></th>
+        </tr>
+
+        {{#each renters}}
+        <tr>
+            <td>{{date}}</td>
+            <td>{{renter}}</td>
+            <td>{{book}}</td>
+            <td>{{amount}}</td>
+            <td class="btn"><a href="/admin/return">Return</a></td>
+        </tr>
+        {{/each}}
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td class="btn"><a href="/admin/add_renter">Add Renter</a></td>
+        </tr>
+    </table>
+</body>
+
+</html>
