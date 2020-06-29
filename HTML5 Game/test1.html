@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+
+  <canvas id="canvas"></canvas>
+
+  <script>
+    var canvas = document.getElementById("canvas");
+    var ctx = canvas.getContext("2d");
+    var radius = 100;
+    canvas.width = innerWidth;
+    canvas.height = innerHeight;
+    radius = radius * 0.90;
+
+    ctx.translate(canvas.width / 2, radius * 2);
+
+    class Pendulum {
+      constructor(context, x, y, length, radius, beta) {
+        this.ctx = context;
+        this.x = x; //điểm tâm quay
+        this.y = y;
+        this.length = length;
+        this.radius = radius;
+        this.beta = beta; //Lưu lại góc ban đầu     
+        this.T = 0;
+        this.deltaT = 0.02;
+      }
+
+      update() {
+        // Đây mới là công thức đúng phù hợp với tính chất vật lý con lắc đơn
+        this.angle = this.beta * Math.sin(this.T) + Math.PI * 0.5;
+        this.T += this.deltaT;
+
+        let c = this.ctx;
+        c.beginPath();
+        c.lineWidth = 4;
+        c.lineCap = "round";
+        c.moveTo(this.x, this.y);
+        c.strokeStyle = "black";
+        c.lineTo(this.x + this.length * Math.cos(this.angle),
+          this.y + this.length * Math.sin(this.angle));
+        c.stroke();
+
+        c.beginPath();
+        c.arc(this.x + (this.length + this.radius) * Math.cos(this.angle),
+          this.y + (this.length + this.radius) * Math.sin(this.angle),
+          this.radius, 0, Math.PI * 2, false);
+
+        c.fillStyle = this.color;
+        c.fill();
+        c.stroke();
+        c.closePath();
+      }
+    }
+
+    let pendulum = new Pendulum(ctx, 0, 0, canvas.height * 0.5, 20, Math.PI * 0.08);
+
+
+    ///////////////////////////
+    function ve_mat_sau() {
+      ctx.beginPath()
+      ctx.fillRect(-radius * 1.5, 0, radius * 3, canvas.height - radius * 2);
+      // ctx.strokeRect(-radius * 1.5, 0, radius * 3, canvas.height - radius * 2);
+      ctx.fillStyle = "yellow";
+      ctx.fill();
+      ctx.arc(0, 0, radius * 1.5, 0, Math.PI, true);
+      ctx.fill();
+    }
+
+    function ve_truoc_tren() {
+      ctx.beginPath()
+      ctx.fillRect(-radius * 1.5, 0, radius * 3, radius * 1.5)
+      ctx.fillStyle = "yellow";
+      ctx.fill();
+      ctx.arc(0, 0, radius * 1.5, 0, Math.PI, true);
+      ctx.fill();
+    }
+
+    function ve_truoc_duoi() {
+      ctx.beginPath()
+      ctx.fillStyle = 'green';
+      ctx.fillRect(-radius * 1.5, radius * 1.5, radius * 0.75, canvas.height - radius * 3);
+      ctx.fillRect(radius * 0.75, radius * 1.5, radius * 0.75, canvas.height - radius * 3);
+      ctx.fillRect(-radius * 1.5, radius * 1.5, radius * 3, radius * 0.75);
+      ctx.fillRect(-radius * 1.5, canvas.height - radius * 2.75, radius * 3, radius * 0.75);
+      // var jdo = ctx.fillRect(-radius*1.5, radius*1.5, radius*3, canvas.height - radius*3);
+      // jdo.clearRect(-radius*0.75, radius*1.5, radius*1.5, canvas.height - radius*3);
+      ctx.fill();
+    }
+
+
+
+
+
+
+    /////////////////////////////////
+
+    function drawClock() {
+      requestAnimationFrame(drawClock);
+
+      ctx.clearRect(-canvas.width / 2, -radius * 2, canvas.width, canvas.height);
+      ve_mat_sau();
+      pendulum.update();
+      ve_truoc_tren();
+      ve_truoc_duoi();
+      drawFace(ctx, radius);
+      drawNonnumbers(ctx, radius);
+      // drawNum2(ctx,radius);
+      drawTime(ctx, radius);
+    }
+
+    drawClock();
+
+
+    function drawFace(ctx, radius) {
+      var grad;
+
+      ctx.beginPath();
+      ctx.arc(0, 0, radius, 0, 2 * Math.PI);
+      ctx.fillStyle = 'white';
+      ctx.fill();
+
+      grad = ctx.createRadialGradient(0, 0, radius * 0.95, 0, 0, radius * 1.05);
+      grad.addColorStop(0, '#333');
+      grad.addColorStop(0.5, 'white');
+      grad.addColorStop(1, '#333');
+      ctx.strokeStyle = grad;
+      ctx.lineWidth = radius * 0.1;
+      ctx.stroke();
+
+      // Vẽ một điểm ở chính tâm quay kim đồng hồ
+      ctx.beginPath();
+      ctx.arc(0, 0, radius * 0.1, 0, 2 * Math.PI);
+      ctx.fillStyle = '#333';
+      ctx.fill();
+      ctx.closePath();
+    }
+
+    function drawNumbers(ctx, radius) {
+      var ang;
+      var num;
+      ctx.font = radius * 0.15 + "px arial";
+      ctx.textBaseline = "middle";
+      ctx.textAlign = "center";
+      for (num = 1; num < 13; num++) {
+        ang = num * Math.PI / 6 - 0.5 * Math.PI;
+        ctx.fillText(num.toString(), radius * 0.85 * Math.cos(ang), radius * 0.85 * Math.sin(ang));
+      }
+    }
+
+    function drawNonnumbers(ctx, radius) {
+      var ang;
+      var num;
+      for (num = 1; num <= 60; num++) {
+        ang = num * Math.PI / 30 - 0.5 * Math.PI;
+        ctx.beginPath();
+        if (num % 15 == 0) {
+          ctx.lineWidth = 0.02 * radius;
+          ctx.moveTo(radius * 0.75 * Math.cos(ang), radius * 0.75 * Math.sin(ang));
+        }
+        else if (num % 5 == 0) {
+          ctx.lineWidth = 0.015 * radius;
+          ctx.moveTo(radius * 0.8 * Math.cos(ang), radius * 0.8 * Math.sin(ang));
+        }
+        else {
+          ctx.lineWidth = 0.01 * radius;
+          ctx.moveTo(radius * 0.85 * Math.cos(ang), radius * 0.85 * Math.sin(ang));
+        }
+        ctx.lineTo(radius * 0.9 * Math.cos(ang), radius * 0.9 * Math.sin(ang));
+        ctx.stroke();
+      }
+    }
+
+    function drawNum2(ctx, radius) {
+      var ang;
+      var num;
+      ctx.font = radius * 0.15 + "px arial";
+      ctx.textBaseline = "middle";
+      ctx.textAlign = "center";
+      for (num = 1; num <= 4; num++) {
+        ang = num * Math.PI / 2 - 0.5 * Math.PI;
+        ctx.fillText((num * 3).toString(), radius * 0.85 * Math.cos(ang), radius * 0.85 * Math.sin(ang));
+      }
+      for (num = 1; num <= 60; num++) {
+        if (num % 15 == 0) {
+          continue;
+        }
+        ang = num * Math.PI / 30 - 0.5 * Math.PI;
+        ctx.beginPath();
+        ctx.lineWidth = 0.01 * radius;
+        if (num % 5 == 0) {
+          ctx.moveTo(radius * 0.75 * Math.cos(ang), radius * 0.75 * Math.sin(ang));
+        }
+        else {
+          ctx.moveTo(radius * 0.85 * Math.cos(ang), radius * 0.85 * Math.sin(ang));
+        }
+        ctx.lineTo(radius * 0.9 * Math.cos(ang), radius * 0.9 * Math.sin(ang));
+        ctx.stroke();
+      }
+    }
+
+    function drawTime(ctx, radius) {
+      var now = new Date();
+      var hour = now.getHours();
+      var minute = now.getMinutes();
+      var second = now.getSeconds();
+      var milisecond = now.getMilliseconds();
+
+      // second: mỗi giây, kim giây quay được một góc Math.PI / 30
+      second1 = (second * Math.PI / 30) + (milisecond * Math.PI / 30000);//xác định góc cho kim giây 
+      drawHand(ctx, second1, radius * 0.9, radius * 0.02);
+
+      //minute: trong cùng 1 phút ~ Math.PI/30, tính thêm góc dư do kim giây
+      minute1 = (minute * Math.PI / 30) + (second * Math.PI / (30 * 60));//xác định các góc cho kim phút 
+      drawHand(ctx, minute1, radius * 0.8, radius * 0.07);
+
+
+      //hour: trong cung một giờ ~ Math.PI/6 , tính thêm góc dư do phút, giây
+      hour = hour % 12;
+      hour1 = (hour * Math.PI / 6) + (minute * Math.PI / (6 * 60)) + (second * Math.PI / (360 * 60));
+      drawHand(ctx, hour1, radius * 0.5, radius * 0.07);
+    }
+
+    //vẽ kim trên 
+    function drawHand(ctx, angle, length, width) {
+      ctx.beginPath();
+      ctx.lineWidth = width;
+      ctx.lineCap = "round";
+      ctx.moveTo(0, 0);
+      angle -= Math.PI * 0.5;
+      ctx.lineTo(length * Math.cos(angle), length * Math.sin(angle));
+      ctx.stroke();
+
+      if (length == radius * 0.9) {
+        ctx.beginPath();
+        ctx.arc((length - radius * 0.1) * Math.cos(angle), (length - radius * 0.1) * Math.sin(angle), radius * 0.02, 0, 2 * Math.PI, false);
+        ctx.fillStyle = 'red';
+        ctx.fill();
+        ctx.stroke();
+      }
+    }
+    ////////////////////////////////
+
+
+
+  </script>
+</body>
+
+</html>
