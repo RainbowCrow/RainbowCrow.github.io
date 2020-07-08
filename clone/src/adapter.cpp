@@ -4,7 +4,7 @@ using namespace std;
 
 Adapter::Adapter(const string &name, const int &price, const int &amount)
 {
-    oName = name + " second-hand";
+    oName = name;
     oPrice = price * 0.75;
     oAmount = amount;
 }
