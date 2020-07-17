@@ -16,7 +16,14 @@ body {
     border-radius: 10px;
 }
 
-#btn, #btn2 {
+.icon {
+    font-size: 25px;
+    position: absolute;
+    left: 10px;
+    top: 5px;
+}
+
+#btn, #btn2, #btn4 {
     display: inline;
 }
 
@@ -48,7 +55,7 @@ input {
     display: none;
     border-radius: 5px;
     border: none;
-    width: 200px;
+    width: 120px;
 }
 
 #upd {
@@ -60,7 +67,7 @@ h1 {
     text-align: center;
 }
 
-#btn, #btn2, #btn3 {
+#btn, #btn2, #btn3, #btn4 {
     margin: auto;
     margin-top: 10px;
     border: none;
@@ -75,5 +82,11 @@ h1 {
     color: #10ac84;
     background-color: #0abde3;
 }
+
+.image {
+    overflow: hidden;
+    width: 200px;
+}
+
 
 

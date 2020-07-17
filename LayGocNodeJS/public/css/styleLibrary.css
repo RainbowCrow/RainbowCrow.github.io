@@ -18,7 +18,7 @@ body {
 }
 
 .styleTable td {
-    background-color: #f0e7da;
+    background-color: #fff;
     padding: 5px;
     text-align: center;
 }
@@ -33,6 +33,12 @@ a {
     color: #10ac84;
 }
 
+.icon {
+    font-size: 25px;
+    position: absolute;
+    left: 10px;
+}
+
 .btn:hover a {
     color: white;
 }
@@ -43,4 +49,9 @@ a:visited {
 
 .btn:hover {
     background-color: aqua;
+}
+
+img {
+    height: 200px;
+    width: auto;
 }
